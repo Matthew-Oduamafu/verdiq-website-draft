@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verdiq - Smart Tools for Smarter Farming</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #1a4d2e;
+      --primary-light: #4f9460;
+      --accent: #7cb342;
+      --secondary: #ff6f00;
+      --earth-brown: #8d6e63;
+      --soft-green: #e8f5e9;
+      --soft-bg: #fafafa;
+      --dark: #1b1b1b;
+      --gray: #616161;
+      --light-gray: #f5f5f5;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.8;
+      color: var(--dark);
+      position: relative;
+      background: var(--soft-bg);
+      overflow-x: hidden;
+    }
+
+    /* Floating Shapes Background */
+    .floating-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .shape {
+      position: absolute;
+      opacity: 0.2;
+      animation: floatShape 25s infinite ease-in-out;
+      will-change: transform;
+    }
+
+    .shape.circle {
+      border-radius: 50%;
+    }
+
+    .shape.square {
+      border-radius: 10px;
+    }
+
+    .shape.triangle {
+      width: 0;
+      height: 0;
+      background: transparent !important;
+      border-left: 40px solid transparent;
+      border-right: 40px solid transparent;
+    }
+
+    .shape:nth-child(1) {
+      width: 80px;
+      height: 80px;
+      background: var(--accent);
+      left: 10%;
+      top: 15%;
+      animation-delay: 0s;
+      animation-duration: 20s;
+    }
+
+    .shape:nth-child(2) {
+      width: 60px;
+      height: 60px;
+      background: var(--primary);
+      right: 10%;
+      top: 25%;
+      animation-delay: 3s;
+      animation-duration: 28s;
+    }
+
+    .shape:nth-child(3) {
+      width: 100px;
+      height: 100px;
+      background: var(--secondary);
+      left: 15%;
+      bottom: 20%;
+      animation-delay: 6s;
+      animation-duration: 24s;
+    }
+
+    .shape:nth-child(4) {
+      border-bottom: 80px solid var(--accent);
+      right: 20%;
+      top: 55%;
+      animation-delay: 9s;
+      animation-duration: 30s;
+    }
+
+    .shape:nth-child(5) {
+      width: 70px;
+      height: 70px;
+      background: var(--primary-light);
+      left: 50%;
+      top: 40%;
+      animation-delay: 12s;
+      animation-duration: 22s;
+    }
+
+    .shape:nth-child(6) {
+      width: 90px;
+      height: 90px;
+      background: var(--soft-green);
+      left: 30%;
+      bottom: 10%;
+      animation-delay: 15s;
+      animation-duration: 26s;
+    }
+
+    .shape:nth-child(7) {
+      border-bottom: 60px solid var(--secondary);
+      right: 30%;
+      top: 10%;
+      animation-delay: 4s;
+      animation-duration: 29s;
+    }
+
+    .shape:nth-child(8) {
+      width: 50px;
+      height: 50px;
+      background: var(--accent);
+      left: 40%;
+      top: 30%;
+      animation-delay: 8s;
+      animation-duration: 27s;
+    }
+
+    @keyframes floatShape {
+      0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      25% {
+        transform: translate(30px, -40px) rotate(90deg);
+      }
+      50% {
+        transform: translate(-20px, -80px) rotate(180deg);
+      }
+      75% {
+        transform: translate(40px, -50px) rotate(270deg);
+      }
+    }
+
+
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      z-index: 1000;
+      padding: 1.2rem 0;
+      transition: all 0.3s ease;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .logo:hover {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .cta-button {
+      background: var(--accent);
+      color: white;
+      padding: 0.7rem 1.8rem;
+      border-radius: 25px;
+      text-decoration: none;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+
+    .cta-button:hover {
+      background: var(--primary-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(139, 195, 74, 0.3);
+    }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--dark);
+    }
+
+    /* Hero Section */
+    .hero {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10rem 2rem 8rem;
+      margin: 0;
+      background: linear-gradient(135deg, rgba(232, 245, 233, 0.6) 0%, rgba(250, 250, 250, 0.5) 100%),
+      /*url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1600&q=80');*/
+      url('./img/african_farmers.jpg');
+      background-size: cover;
+      background-position: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero h1 {
+      font-size: 4.5rem;
+      color: var(--primary);
+      margin-bottom: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .hero .tagline {
+      font-size: 1.4rem;
+      color: var(--accent);
+      margin-bottom: 2rem;
+      font-weight: 600;
+      animation: fadeInUp 1s ease;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: 0 auto 3rem;
+      font-size: 1.1rem;
+      color: var(--dark);
+      line-height: 1.9;
+      animation: fadeInUp 1.2s ease;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeInUp 1.4s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      padding: 1.1rem 3rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(139, 195, 74, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(139, 195, 74, 0.4);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--primary);
+      padding: 1.1rem 3rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+      border: 2px solid var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(45, 80, 22, 0.2);
+    }
+
+    /* Section Styles */
+    section {
+      padding: 6rem 2rem;
+      position: relative;
+      z-index: 1;
+      background: transparent;
+    }
+
+    section:not(.hero) {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-header h2 {
+      font-size: 3rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .section-header p {
+      color: var(--gray);
+      font-size: 1.15rem;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    /* Problem Section */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+    }
+
+    .problem-card {
+      background: white;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+      transition: all 0.3s ease;
+    }
+
+    .problem-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .problem-card h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .problem-card p {
+      color: var(--gray);
+      line-height: 1.8;
+    }
+
+    .problem-icon {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+
+    /* Products Section */
+    #products {
+      background: white;
+      padding: 6rem 2rem;
+      margin: 2rem auto;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2.5rem;
+    }
+
+    .product-card {
+      background: var(--soft-bg);
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 220px;
+      background: linear-gradient(135deg, var(--soft-green) 0%, #c8e6c9 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+
+    .product-content {
+      padding: 2rem 1.8rem;
+      background: white;
+    }
+
+    .product-content h3 {
+      color: var(--primary);
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .product-content p {
+      color: var(--gray);
+      line-height: 1.8;
+    }
+
+    /* Impact Section */
+    #impact {
+      background: linear-gradient(135deg, var(--soft-green) 0%, rgba(139, 195, 74, 0.1) 100%);
+      padding: 6rem 2rem;
+      margin: 2rem auto;
+    }
+
+    .impact-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      text-align: center;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .stat-card {
+      padding: 2rem 1.5rem;
+      background: white;
+      color: var(--dark);
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 180px;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 10px 30px rgba(139, 195, 74, 0.2);
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--accent);
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 0.95rem;
+      color: var(--gray);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    /* Team Section */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 3rem;
+    }
+
+    .team-member {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      background: white;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+      transition: all 0.3s ease;
+    }
+
+    .team-member:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.1);
+    }
+
+    .team-photo {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      color: white;
+      box-shadow: 0 6px 20px rgba(124, 179, 66, 0.3);
+    }
+
+    .team-member h3 {
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      font-size: 1.4rem;
+    }
+
+    .team-role {
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      font-size: 1.05rem;
+    }
+
+    .team-member p {
+      color: var(--gray);
+      line-height: 1.8;
+    }
+
+    /* Contact Section */
+    #contact {
+      background: white;
+      padding: 6rem 2rem;
+      margin: 2rem auto;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+
+    .contact-content {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+      margin-top: 2.5rem;
+    }
+
+    .contact-item {
+      background: var(--soft-bg);
+      padding: 2rem 1.8rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .contact-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(139, 195, 74, 0.15);
+    }
+
+    .contact-item strong {
+      color: var(--primary);
+      display: block;
+      margin-bottom: 0.8rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .contact-item a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .contact-item a:hover {
+      color: var(--primary-light);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--primary);
+      color: white;
+      padding: 3.5rem 2rem 1.5rem;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .copyright {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 1.5rem;
+      margin-top: 2rem;
+      opacity: 0.8;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero h1 {
+        font-size: 3.5rem;
+      }
+
+      .hero .tagline {
+        font-size: 1.3rem;
+      }
+
+      .hero p {
+        font-size: 1.05rem;
+      }
+
+      .section-header h2 {
+        font-size: 2.6rem;
+      }
+
+      .section-header p {
+        font-size: 1.1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 100%;
+        flex-direction: column;
+        background: white;
+        padding: 2rem;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        transition: left 0.3s;
+      }
+
+      .nav-links.active {
+        left: 0;
+      }
+
+      .mobile-toggle {
+        display: block;
+      }
+
+      .hero {
+        padding: 6rem 1.5rem 4rem;
+      }
+
+      .hero h1 {
+        font-size: 2.8rem;
+      }
+
+      .hero .tagline {
+        font-size: 1.15rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .btn-primary, .btn-secondary {
+        padding: 1rem 2.5rem;
+        font-size: 0.95rem;
+      }
+
+      .section-header h2 {
+        font-size: 2.2rem;
+      }
+
+      .section-header p {
+        font-size: 1rem;
+      }
+
+      section {
+        padding: 4rem 1.5rem;
+      }
+
+      .problem-grid,
+      .products-grid,
+      .team-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .impact-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+      }
+
+      .stat-card {
+        padding: 1.8rem 1.2rem;
+        min-height: 160px;
+      }
+
+      .stat-number {
+        font-size: 2.5rem;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+      }
+
+      .product-content h3,
+      .problem-card h3,
+      .team-member h3 {
+        font-size: 1.2rem;
+      }
+
+      .shape {
+        transform: scale(0.7);
+      }
+
+      .footer-links {
+        gap: 1.5rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo {
+        font-size: 1.5rem;
+      }
+
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero .tagline {
+        font-size: 1rem;
+      }
+
+      .hero p {
+        font-size: 0.95rem;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .btn-primary, .btn-secondary {
+        padding: 0.9rem 2rem;
+        font-size: 0.9rem;
+        width: 100%;
+      }
+
+      .section-header h2 {
+        font-size: 1.8rem;
+      }
+
+      .section-header p {
+        font-size: 0.95rem;
+      }
+
+      section {
+        padding: 3rem 1rem;
+      }
+
+      .problem-icon {
+        font-size: 2.5rem;
+      }
+
+      .problem-card,
+      .product-card,
+      .team-member,
+      .contact-item {
+        padding: 1.5rem;
+      }
+
+      .product-image {
+        height: 180px;
+        font-size: 3rem;
+      }
+
+      .impact-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .stat-card {
+        padding: 1.5rem 1rem;
+        min-height: 140px;
+      }
+
+      .stat-number {
+        font-size: 2.2rem;
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+      }
+
+      .team-photo {
+        width: 120px;
+        height: 120px;
+        font-size: 3rem;
+      }
+
+      .team-member h3 {
+        font-size: 1.2rem;
+      }
+
+      .team-role {
+        font-size: 0.95rem;
+      }
+
+      .team-member p,
+      .problem-card p,
+      .product-content p {
+        font-size: 0.95rem;
+      }
+
+      .contact-item strong {
+        font-size: 1rem;
+      }
+
+      .contact-item {
+        font-size: 0.95rem;
+      }
+
+      .footer-links {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .copyright {
+        font-size: 0.85rem;
+      }
+
+      .shape {
+        transform: scale(0.5);
+      }
+    }
+
+    @media (max-width: 360px) {
+      .hero h1 {
+        font-size: 1.9rem;
+      }
+
+      .section-header h2 {
+        font-size: 1.6rem;
+      }
+
+      .stat-number {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- Floating Shapes -->
+<div class="floating-shapes">
+  <div class="shape circle"></div>
+  <div class="shape square"></div>
+  <div class="shape circle"></div>
+  <div class="shape triangle"></div>
+  <div class="shape square"></div>
+  <div class="shape circle"></div>
+  <div class="shape triangle"></div>
+  <div class="shape square"></div>
+</div>
+
+<!-- Navigation -->
+<nav id="navbar">
+  <div class="nav-container">
+    <a href="#home" class="logo">Verdiq</a>
+    <button class="mobile-toggle" onclick="toggleMenu()">☰</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#impact">Impact</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#contact" class="cta-button">Get in Touch</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="home" class="hero">
+  <div class="hero-content">
+    <h1>Verdiq</h1>
+    <p class="tagline">Smart Tools for Smarter Farming</p>
+    <p>Empowering African farmers with AI-powered, eco-friendly agricultural technology that reduces manual labor, protects the environment, and improves productivity.</p>
+    <div class="hero-buttons">
+      <a href="#products" class="btn-primary">Explore Products</a>
+      <a href="#contact" class="btn-secondary">Partner With Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- Problem Section -->
+<section id="problem">
+  <div class="section-header">
+    <h2>The Challenge We're Solving</h2>
+    <p>African smallholder farmers face critical barriers to productivity and sustainability</p>
+  </div>
+  <div class="problem-grid">
+    <div class="problem-card">
+      <span class="problem-icon">💪</span>
+      <h3>Manual Labor & Inefficiency</h3>
+      <p>Farmers rely on outdated tools like hoes and cutlasses, leading to fatigue, low yields, and limited scalability.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">🌍</span>
+      <h3>Environmental Damage</h3>
+      <p>Heavy reliance on herbicides and diesel-powered tools harms soil fertility and contributes to greenhouse gas emissions.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">💧</span>
+      <h3>Water Scarcity</h3>
+      <p>Inefficient irrigation systems waste precious resources that communities share for both irrigation and domestic use.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">📦</span>
+      <h3>Import Dependence</h3>
+      <p>Imported machinery is expensive, ill-suited to local soil, and difficult to maintain, reducing local innovation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Products Section -->
+<section id="products">
+  <div class="section-header">
+    <h2>Our Solutions</h2>
+    <p>Locally engineered, AI-powered tools designed for African farming realities</p>
+  </div>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="product-image">🔋</div>
+      <div class="product-content">
+        <h3>Battery-Powered Sprayer</h3>
+        <p>Replaces manual pumping with rechargeable, automated spraying. Lightweight and ergonomic to reduce strain, especially for women farmers.</p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-image">🌱</div>
+      <div class="product-content">
+        <h3>Hand-Held Weeder</h3>
+        <p>Electric-powered, fast, and safe alternative to manual weeding. Reduces chemical herbicide usage and labor time by over 70%.</p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-image">💨</div>
+      <div class="product-content">
+        <h3>Mist Blower</h3>
+        <p>Battery-operated, replacing fuel-powered models. Zero carbon emissions, quiet, and durable for modern farming needs.</p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-image">⚙️</div>
+      <div class="product-content">
+        <h3>Multi-Functional Soil Tool</h3>
+        <p>Multi-purpose design for soil preparation, replacing the hoe and plow. Minimizes farmer fatigue and improves soil structure.</p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-image">🤖</div>
+      <div class="product-content">
+        <h3>AI Laser Weeding Machine</h3>
+        <p>Detects weeds vs. crops using AI vision. Uses lasers or mechanical blades to remove weeds without herbicides, protecting soil health.</p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-image">💧</div>
+      <div class="product-content">
+        <h3>Smart Irrigation System</h3>
+        <p>IoT-based sensors monitor soil moisture and climate. Automatically irrigates when needed, saving up to 35% of water. Solar-powered for off-grid use.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Impact Section -->
+<section id="impact">
+  <div class="section-header">
+    <h2>Our 2028 Impact Goals</h2>
+    <p>Building a sustainable future for African agriculture</p>
+  </div>
+  <div class="impact-stats">
+    <div class="stat-card">
+      <div class="stat-number">10,000+</div>
+      <div class="stat-label">Farmers Empowered</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">50+</div>
+      <div class="stat-label">Local Jobs Created</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">90%</div>
+      <div class="stat-label">Herbicide Reduction</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">35%</div>
+      <div class="stat-label">Water Saved per Hectare</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">25%</div>
+      <div class="stat-label">Average Income Increase</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">100+</div>
+      <div class="stat-label">Tons CO₂ Reduced Yearly</div>
+    </div>
+  </div>
+</section>
+
+<!-- Team Section -->
+<section id="team">
+  <div class="section-header">
+    <h2>Meet Our Team</h2>
+    <p>Passionate innovators combining technology with community impact</p>
+  </div>
+  <div class="team-grid">
+    <div class="team-member">
+      <div class="team-photo">👨‍💼</div>
+      <h3>Matthew E. Oduamafu</h3>
+      <div class="team-role">Co-Founder & CEO</div>
+      <p>MSc Mechatronics, Ashesi University. Expert in embedded systems, AI, and software engineering with a passion for community-driven technology.</p>
+    </div>
+    <div class="team-member">
+      <div class="team-photo">👩‍🔧</div>
+      <h3>Sherifa Yakubu</h3>
+      <div class="team-role">Co-Founder & Lead Engineer</div>
+      <p>MSc Mechatronics, Ashesi University. Leading our engineering innovation and product development initiatives.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact">
+  <div class="section-header">
+    <h2>Let's Build the Future Together</h2>
+    <p>Partner with us to transform African agriculture</p>
+  </div>
+  <div class="contact-content">
+    <p style="margin-bottom: 2rem; color: var(--gray);">Whether you're an investor, NGO partner, farmer cooperative, or government agency, we'd love to hear from you.</p>
+    <div class="contact-info">
+      <div class="contact-item">
+        <strong>📧 Email</strong>
+        <a href="mailto:matthew.oduamafu@ashesi.edu.gh">matthew.oduamafu@ashesi.edu.gh</a>
+      </div>
+      <div class="contact-item">
+        <strong>📍 Location</strong>
+        <span style="color: var(--gray);">Accra, Ghana</span>
+      </div>
+      <div class="contact-item">
+        <strong>💰 Investment Opportunity</strong>
+        <span style="color: var(--gray);">Seeking $150,000 seed funding for research, field trials, and scale-up</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-links">
+      <a href="#home">Home</a>
+      <a href="#problem">Problem</a>
+      <a href="#products">Products</a>
+      <a href="#impact">Impact</a>
+      <a href="#team">Team</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="copyright">
+      <p>&copy; 2026 Verdiq Ltd. All rights reserved.</p>
+      <p style="margin-top: 0.5rem; font-size: 0.9rem;">Smart Tools for Smarter Farming</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Smooth scroll functionality
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        const navHeight = document.getElementById('navbar').offsetHeight;
+        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth'
+        });
+        document.getElementById('navLinks').classList.remove('active');
+      }
+    });
+  });
+
+  function toggleMenu() {
+    const navLinks = document.getElementById('navLinks');
+    navLinks.classList.toggle('active');
+  }
+
+  // Close mobile menu when clicking outside
+  document.addEventListener('click', function(event) {
+    const navLinks = document.getElementById('navLinks');
+    const mobileToggle = document.querySelector('.mobile-toggle');
+
+    if (!navLinks.contains(event.target) && !mobileToggle.contains(event.target)) {
+      navLinks.classList.remove('active');
+    }
+  });
+</script>
